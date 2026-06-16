@@ -5,15 +5,14 @@ import dotenv from "dotenv";
 
 dotenv.config()
 const app = express();
+const PORT = process.env.PORT || 5000;
 
-app.get('/',(req,res)=>{
-  res.send("Hello Nigga ")
-})
+app.use(express.json());
 
 app.use('/api/auth', authRoutes)
 
-connectDB().then(app.listen(3000,()=>{
-  console.log("Server is running on port 3000...............")
+connectDB().then(app.listen(PORT,()=>{
+  console.log(`Server is running on port ${PORT}`)
 }))
 
 
