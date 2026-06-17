@@ -64,6 +64,18 @@ export const signUp = async (req, res) => {
   }
 };
 
+export const verifyEmail = async (req,res) => {
+  
+  const {code} = req.body;
+
+  try {
+    const user = await User.findOne({verificationToken:code, verificationTokenExpiresAt:{$gt: Date.now()}})
+  } catch (error) {
+    
+  }
+
+}
+
 export const login = async (req, res) => {
   res.send("login");
 };
