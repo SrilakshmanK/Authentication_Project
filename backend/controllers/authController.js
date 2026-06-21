@@ -1,7 +1,7 @@
 import { User } from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
-import { sendVerificationEmail } from "../mailtrap/emails.js";
+import { sendVerificationEmail , sendWelcomeEmail } from "../mailtrap/emails.js";
 export const signUp = async (req, res) => {
   const { email, password, name } = req.body;
 
@@ -41,8 +41,7 @@ export const signUp = async (req, res) => {
     await user.save();
 
     generateTokenAndSetCookie(res, user.id);
-    await sendVerificationEmail(user.email,verificationToken);
-
+    await sendVerificationEmail(user.email, verificationToken);
 
     res.status(201).json({
       success: true,
@@ -53,28 +52,58 @@ export const signUp = async (req, res) => {
       },
     });
   } catch (error) {
-
-    console.log("Error : ",error)
+    console.log("Error : ", error);
     res.status(500).json({
-      
-      message:"Server error",
-      error:true,
-      success:false
-    })
+      message: "Server error",
+      error: true,
+      success: false,
+    });
   }
 };
 
-export const verifyEmail = async (req,res) => {
-  
-  const {code} = req.body;
+export const verifyEmail = async (req, res) => {
+  const { code } = req.body;
 
   try {
-    const user = await User.findOne({verificationToken:code, verificationTokenExpiresAt:{$gt: Date.now()}})
-  } catch (error) {
-    
+    const user = await User.findOne({
+      verificationToken: code,
+      verificationTokenExpiresAt: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "Invalid or Expired Verification Code .",
+        });
+    }
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpiresAt = undefined;
+    await user.save();
+
+    await sendWelcomeEmail(user.email,user.name)
+
+    return res.status(200).json({
+      message:"User verified successfully .",
+      success:true,
+      error:false
+    })
+
+
+  } 
+  catch (error) {
+    return res.status(500).json({
+      message:error,
+      success:false,
+      error:true
+    })
+    console.error("Error verifing user",error)
   }
 
-}
+
+};
 
 export const login = async (req, res) => {
   res.send("login");
