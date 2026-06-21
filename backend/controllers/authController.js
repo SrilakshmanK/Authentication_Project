@@ -1,7 +1,7 @@
 import { User } from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
-import { sendVerificationEmail , sendWelcomeEmail } from "../mailtrap/emails.js";
+import { sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/emails.js";
 export const signUp = async (req, res) => {
   const { email, password, name } = req.body;
 
@@ -71,43 +71,74 @@ export const verifyEmail = async (req, res) => {
     });
 
     if (!user) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Invalid or Expired Verification Code .",
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or Expired Verification Code .",
+      });
     }
     user.isVerified = true;
     user.verificationToken = undefined;
     user.verificationTokenExpiresAt = undefined;
     await user.save();
 
-    await sendWelcomeEmail(user.email,user.name)
+    await sendWelcomeEmail(user.email, user.name);
 
     return res.status(200).json({
-      message:"User verified successfully .",
-      success:true,
-      error:false
-    })
-
-
-  } 
-  catch (error) {
+      message: "User verified successfully .",
+      success: true,
+      error: false,
+    });
+  } catch (error) {
     return res.status(500).json({
-      message:error,
-      success:false,
-      error:true
-    })
-    console.error("Error verifing user",error)
+      message: error,
+      success: false,
+      error: true,
+    });
+    console.error("Error verifing user", error);
   }
-
-
 };
 
 export const login = async (req, res) => {
-  res.send("login");
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "No account found with this email",
+      });
+    }
+
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+      return res.status(401).json({
+        success: false,
+        message: "Incorrect password",
+      });
+    }
+
+    generateTokenAndSetCookie(res, user.id);
+    user.lastLogin = new Date();
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      error: false,
+      message: "Logged in successfully",
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
 };
 export const logout = async (req, res) => {
-  res.send("logout");
+  res.clearCookie("token");
+  res
+    .status(200)
+    .json({ message: "Logout successfully .", success: true, error: false });
 };
