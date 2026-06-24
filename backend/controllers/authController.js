@@ -35,7 +35,7 @@ export const signUp = async (req, res) => {
     const hashedPwd = await bcrypt.hash(password, 10);
 
     const verificationToken = Math.floor(
-      10000 + Math.random() * 90000,
+      100000 + Math.random() * 900000,
     ).toString();
 
     const user = new User({

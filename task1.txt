@@ -1,0 +1,104 @@
+Task 1 — Build the simplest OTP UI
+
+Create:
+
+[ ] [ ] [ ] [ ] [ ] [ ]
+
+Requirements:
+
+6 inputs
+Store values in state
+Show the entered code below
+
+Example:
+
+[1] [2] [3] [4] [5] [6]
+
+Code: 123456
+
+Concepts:
+
+useState
+map
+onChange
+Task 2 — Auto Focus
+
+When user types:
+
+[1] [ ] [ ] [ ] [ ] [ ]
+
+cursor automatically jumps to next input.
+
+Concepts:
+
+useRef
+focus()
+
+Hint:
+
+inputRefs.current[index + 1].focus();
+Task 3 — Backspace Navigation
+
+Example:
+
+[1] [2] [ ] [ ] [ ] [ ]
+          ^
+
+Press Backspace.
+
+Focus moves to:
+
+[1] [2] [ ] [ ] [ ] [ ]
+      ^
+
+Concepts:
+
+onKeyDown
+e.key
+conditions
+Task 4 — Disable Button
+
+Button:
+
+<button>Verify</button>
+
+should stay disabled until all 6 boxes are filled.
+
+Concepts:
+
+some()
+
+Hint:
+
+code.some(digit => !digit)
+Task 5 — Paste Support
+
+Paste:
+
+123456
+
+into first box.
+
+Result:
+
+[1] [2] [3] [4] [5] [6]
+
+Concepts:
+
+strings
+arrays
+split()
+Task 6 — Auto Submit
+
+When all boxes contain values:
+
+123456
+
+automatically:
+
+console.log("submitted");
+
+Concepts:
+
+useEffect
+every()
