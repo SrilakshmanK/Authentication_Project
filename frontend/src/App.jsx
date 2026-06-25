@@ -9,6 +9,7 @@ import TestPage from "./pages/TestPage.jsx";
 import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "./store/authStore.js";
 import { Children, useEffect } from "react";
+import LoadingSpinner from "./components/LoadingSpinner.jsx";
 
 // protect routes that require authentication 
 const ProtectedRoute = ({children}) => {
@@ -42,8 +43,7 @@ function App() {
     checkAuth();
   }, [checkAuth]);
 
-  console.log("isAuthenticated:", isAuthenticated);
-  console.log("User :", user);
+  if (isCheckingAuth) return <LoadingSpinner />
 
   return (
     <div className="min-h-screen bg-linear-to-br from-zinc-950 via-slate-900 to-indigo-950 flex items-center justify-center relative overflow-hidden">
