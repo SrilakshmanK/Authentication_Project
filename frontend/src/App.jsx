@@ -37,7 +37,7 @@ const RedirectAuthenticatedUser = ({ children }) => {
 };
 
 function App() {
-  const { isCheckingAuth, checkAuth, isAuthenticated, user } = useAuthStore();
+  const { isCheckingAuth, checkAuth} = useAuthStore();
 
   useEffect(() => {
     checkAuth();
@@ -95,6 +95,10 @@ function App() {
         />
 
         <Route path="/verify-email" element={<EmailVerificationPage />} />
+        <Route path="/forgot-password" element={<RedirectAuthenticatedUser>
+          <ForgotPasswordPage />
+        </RedirectAuthenticatedUser>} />
+
 
         <Route path="/testing" element={<TestPage />} />
       </Routes>
