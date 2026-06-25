@@ -4,12 +4,15 @@ import crypto from "crypto";
 import { User } from "../models/userModel.js";
 
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
+
 import {
   sendVerificationEmail,
   sendWelcomeEmail,
   sendPasswordResetEmail,
   sendResetSuccessEmail
 } from "../mailtrap/emails.js";
+
+
 export const signUp = async (req, res) => {
   const { email, password, name } = req.body;
 

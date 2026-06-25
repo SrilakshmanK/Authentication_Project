@@ -10,6 +10,7 @@ import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "./store/authStore.js";
 import { Children, useEffect } from "react";
 import LoadingSpinner from "./components/LoadingSpinner.jsx";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage.jsx";
 
 // protect routes that require authentication 
 const ProtectedRoute = ({children}) => {
