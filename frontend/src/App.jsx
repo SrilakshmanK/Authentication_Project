@@ -102,6 +102,8 @@ function App() {
 
 
         <Route path="/testing" element={<TestPage />} />
+
+        <Route path="*" element={<Navigate to='/' replace />} />
       </Routes>
       <Toaster />
     </div>
