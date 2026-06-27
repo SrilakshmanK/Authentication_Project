@@ -52,7 +52,12 @@ export const signUp = async (req, res) => {
     await user.save();
 
     generateTokenAndSetCookie(res, user.id);
+
+    try {
     await sendVerificationEmail(user.email, verificationToken);
+} catch (err) {
+    console.error("Email failed:", err);
+}
 
     res.status(201).json({
       success: true,
