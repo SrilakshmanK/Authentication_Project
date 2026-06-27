@@ -15,4 +15,14 @@ export const transporter = nodemailer.createTransport({
   },
 });
 
+console.log("SMTP Config:");
+console.log({
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
+});
 
+
+transporter.verify()
+  .then(() => console.log("SMTP Ready"))
+  .catch(err => console.error("SMTP Error:", err));
