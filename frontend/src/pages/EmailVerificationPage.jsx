@@ -10,7 +10,7 @@ const EmailVerificationPage = () => {
   const navigate = useNavigate();
   
 
-  const {error,isLoading,verifyEmail} = useAuthStore();
+  const {error,isLoading,verifyEmail,checkAuth} = useAuthStore();
 
   const handleChange = (index, value) => {
     const newCode = [...code];
@@ -43,12 +43,13 @@ const EmailVerificationPage = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    
     const verificationCode = code.join("");
     try {
       await verifyEmail(verificationCode);
-      navigate("/");
+      await checkAuth();
+      navigate("/login");
       toast.success("Email verified successfully")
     } catch (error) {
       console.log(error)

@@ -1,5 +1,4 @@
-import { transporter } from "./email.config.js";
-
+import apiInstance from "./email.config.js";
 
 import {
   PASSWORD_RESET_REQUEST_TEMPLATE,
@@ -8,69 +7,82 @@ import {
   WELCOME_EMAIL,
 } from "./emailTemplates.js";
 
-
-export const sendVerificationEmail = async (email, verificationToken) => {
+const sendEmail = async ({ to, subject, htmlContent }) => {
   try {
-    const response = await transporter.sendMail({
-      from: `"Auth App" <${process.env.EMAIL}>`,
-      to: email,
-      subject: "Verify your email",
-      html: VERIFICATION_EMAIL_TEMPLATE.replace(
-        "{verificationCode}",
-        verificationToken
-      ),
+    await apiInstance.transactionalEmails.sendTransacEmail({
+      sender: {
+        email: process.env.SENDER_EMAIL,
+        name: process.env.SENDER_NAME,
+      },
+
+      to: [
+        {
+          email: to,
+        },
+      ],
+
+      subject,
+
+      htmlContent,
     });
 
-    console.log("Email sent successfully", response.messageId);
+    console.log("Email sent successfully");
+    
   } catch (error) {
-    console.error("Error sending verification email", error);
+    console.error("Email Error:", error);
+    throw error;
   }
 };
 
-export const sendWelcomeEmail = async (email, name) => {
-  try {
-    const response = await transporter.sendMail({
-      from: `"Auth App" <${process.env.EMAIL}>`,
-      to: email,
-      subject: "Welcome Email",
-      html: WELCOME_EMAIL.replace("{name}", name),
-    });
-
-    console.log("Email sent successfully", response.messageId);
-  } catch (error) {
-    console.error("Error sending welcome email", error);
-  }
+export const sendVerificationEmail = async (
+  email,
+  verificationToken
+) => {
+  await sendEmail({
+    to: email,
+    subject: "Verify your Email",
+    htmlContent: VERIFICATION_EMAIL_TEMPLATE.replace(
+      "{verificationCode}",
+      verificationToken
+    ),
+  });
 };
 
-export const sendPasswordResetEmail = async (email, resetURL) => {
-  try {
-    const response = await transporter.sendMail({
-      from: `"Auth App" <${process.env.EMAIL}>`,
-      to: email,
-      subject: "Reset Password",
-      html: PASSWORD_RESET_REQUEST_TEMPLATE.replace(
-        "{resetURL}",
-        resetURL
-      ),
-    });
-
-    console.log("Email sent successfully", response.messageId);
-  } catch (error) {
-    console.error("Error sending reset password email", error);
-  }
+export const sendWelcomeEmail = async (
+  email,
+  name
+) => {
+  await sendEmail({
+    to: email,
+    subject: "Welcome to Auth App",
+    htmlContent: WELCOME_EMAIL.replace("{name}", name),
+  });
 };
 
-export const sendResetSuccessEmail = async (email, name) => {
-  try {
-    const response = await transporter.sendMail({
-      from: `"Auth App" <${process.env.EMAIL}>`,
-      to: email,
-      subject: "Password Reset Successful",
-      html: PASSWORD_RESET_SUCCESS_TEMPLATE.replace("{user}", name),
-    });
 
-    console.log("Email sent successfully", response.messageId);
-  } catch (error) {
-    console.error("Error sending password reset success email", error);
-  }
+export const sendPasswordResetEmail = async (
+  email,
+  resetURL
+) => {
+  await sendEmail({
+    to: email,
+    subject: "Reset Password",
+    htmlContent: PASSWORD_RESET_REQUEST_TEMPLATE.replace(
+      "{resetURL}",
+      resetURL
+    ),
+  });
+};
+export const sendResetSuccessEmail = async (
+  email,
+  name
+) => {
+  await sendEmail({
+    to: email,
+    subject: "Password Reset Successful",
+    htmlContent: PASSWORD_RESET_SUCCESS_TEMPLATE.replace(
+      "{user}",
+      name
+    ),
+  });
 };

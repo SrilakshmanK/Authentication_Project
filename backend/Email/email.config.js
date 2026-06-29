@@ -1,28 +1,10 @@
- // malb knse tcwt lpvt
-
-import nodemailer from "nodemailer";
+import { BrevoClient } from "@getbrevo/brevo";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-export const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // true only for 465
-  auth: {
-    user: process.env.EMAIL,
-    pass: process.env.EMAIL_PASSWORD,
-  },
+const brevo = new BrevoClient({
+  apiKey: process.env.BREVO_API_KEY,
 });
 
-console.log("SMTP Config:");
-console.log({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-});
-
-
-transporter.verify()
-  .then(() => console.log("SMTP Ready"))
-  .catch(err => console.error("SMTP Error:", err));
+export default brevo;
