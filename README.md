@@ -1,217 +1,329 @@
-# 🔐 Authentication Project
+# 🔐 Authentication & User Management System
 
-A full-stack authentication system built with the MERN stack, featuring secure JWT-based auth, email verification, and password reset via Nodemailer.
+A production-ready full-stack authentication system built with the **MERN Stack**, featuring secure JWT authentication, email verification, password recovery, HTTP-only cookie sessions, and transactional email delivery powered by **Brevo**.
 
-🌐 **Live Demo:** [https://authentication-project-jphg.onrender.com](https://authentication-project-jphg.onrender.com)
+🌐 **Live Demo:** https://authentication-project-jphg.onrender.com
 
----
-
-## ✨ Features
-
-- **User Sign Up** — Register with name, email, and password
-- **Email Verification** — 6-digit OTP sent via Gmail SMTP; account activates on successful verification
-- **Secure Login / Logout** — JWT stored in an `httpOnly` cookie (7-day expiry)
-- **Forgot Password** — Sends a time-limited reset link to the registered email
-- **Reset Password** — Token-validated password update with success email confirmation
-- **Protected Routes** — Frontend guards redirect unauthenticated or unverified users
-- **Persistent Auth** — `checkAuth` on app load restores session from cookie
-- **Password Strength Meter** — Real-time visual feedback during sign up
-- **Animated UI** — Floating shape background with Framer Motion animations
+📂 **GitHub Repository:** https://github.com/SrilakshmanK/Authentication_Project
 
 ---
 
-## 🛠️ Tech Stack
+# ✨ Features
 
-### Backend
-| Package | Purpose |
-|---|---|
-| Express.js v5 | REST API server |
-| MongoDB + Mongoose | Database & ODM |
-| bcryptjs | Password hashing |
-| jsonwebtoken | JWT generation & verification |
-| Nodemailer | Transactional emails via Gmail SMTP |
-| cookie-parser | Parse `httpOnly` JWT cookies |
-| dotenv | Environment variable management |
-| cors | Cross-origin request handling |
-
-### Frontend
-| Package | Purpose |
-|---|---|
-| React 19 + Vite | UI framework & build tool |
-| React Router DOM v7 | Client-side routing |
-| Zustand | Global auth state management |
-| Axios | HTTP client (with credentials) |
-| Tailwind CSS v4 | Utility-first styling |
-| Framer Motion | Animations |
-| react-hot-toast | Toast notifications |
-| lucide-react | Icon library |
+* 🔐 Secure User Registration
+* 📧 Email Verification using 6-digit OTP
+* 🔑 JWT Authentication with HTTP-only Cookies
+* 🚪 Secure Login & Logout
+* 🔒 Forgot Password with Secure Reset Link
+* ✅ Password Reset Confirmation Email
+* 🛡️ Protected Routes
+* ♻️ Persistent Authentication using `checkAuth`
+* 🔐 Password Hashing with bcrypt
+* 📬 Transactional Emails powered by Brevo
+* 🎨 Modern Animated UI with Framer Motion
+* 📱 Responsive Design
 
 ---
 
-## 📁 Project Structure
+# 🛠️ Tech Stack
+
+## Frontend
+
+* React.js
+* Vite
+* React Router DOM
+* Zustand
+* Axios
+* Tailwind CSS
+* Framer Motion
+* React Hot Toast
+* Lucide React
+
+## Backend
+
+* Node.js
+* Express.js
+* MongoDB Atlas
+* Mongoose
+* JWT (jsonwebtoken)
+* bcryptjs
+* Brevo Transactional Email API
+* cookie-parser
+* dotenv
+* cors
+
+---
+
+# 📁 Project Structure
 
 ```
 Authentication_Project/
+│
 ├── backend/
 │   ├── DB/
-│   │   └── connectDB.js          # MongoDB connection
+│   │   └── connectDB.js
+│   │
 │   ├── Email/
-│   │   ├── email.config.js       # Nodemailer transporter (Gmail SMTP)
-│   │   ├── emailTemplates.js     # HTML email templates
-│   │   └── emails.js             # Email sender functions
-│   ├── Routes/
-│   │   └── authRoutes.js         # Auth API route definitions
+│   │   ├── email.config.js
+│   │   ├── emailTemplates.js
+│   │   └── emails.js
+│   │
 │   ├── controllers/
-│   │   └── authController.js     # Route handler logic
+│   │   └── authController.js
+│   │
 │   ├── middleware/
-│   │   └── verifyToken.js        # JWT auth middleware
+│   │   └── verifyToken.js
+│   │
 │   ├── models/
-│   │   └── userModel.js          # Mongoose User schema
+│   │   └── userModel.js
+│   │
+│   ├── Routes/
+│   │   └── authRoutes.js
+│   │
 │   ├── utils/
-│   │   └── generateTokenAndSetCookie.js  # JWT creation & cookie setter
-│   └── index.js                  # Express app entry point
+│   │   └── generateTokenAndSetCookie.js
+│   │
+│   └── index.js
 │
 ├── frontend/
-│   ├── public/
-│   │   └── favicon.svg
-│   └── src/
-│       ├── components/
-│       │   ├── FloatingShape.jsx         # Animated background blobs
-│       │   ├── Input.jsx                 # Reusable input component
-│       │   ├── LoadingSpinner.jsx        # Full-page loader
-│       │   └── PasswordStrengthMeter.jsx # Real-time password strength UI
-│       ├── pages/
-│       │   ├── SignUpPage.jsx
-│       │   ├── LoginPage.jsx
-│       │   ├── EmailVerificationPage.jsx
-│       │   ├── ForgotPasswordPage.jsx
-│       │   ├── DashboardPage.jsx
-│       │   └── TestPage.jsx
-│       ├── store/
-│       │   └── authStore.js      # Zustand store (all auth actions)
-│       ├── utils/
-│       │   └── date.js           # Date formatting helper
-│       └── App.jsx               # Routes + protected route guards
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── store/
+│   │   ├── utils/
+│   │   └── App.jsx
+│   │
+│   └── public/
 │
-└── package.json                  # Root scripts (build, start, dev)
+└── package.json
 ```
 
 ---
 
-## 🔌 API Endpoints
+# 🔌 API Endpoints
 
-Base URL: `/api/auth`
+Base URL
 
-| Method | Endpoint | Auth Required | Description |
-|---|---|---|---|
-| `GET` | `/check-auth` | ✅ | Verify active session & return user |
-| `POST` | `/signup` | ❌ | Register a new user |
-| `POST` | `/login` | ❌ | Login and set JWT cookie |
-| `POST` | `/logout` | ❌ | Clear JWT cookie |
-| `POST` | `/verify-email` | ❌ | Verify 6-digit OTP |
-| `POST` | `/forgot-password` | ❌ | Send password reset link to email |
-| `POST` | `/reset-password/:token` | ❌ | Reset password using token |
+```
+/api/auth
+```
+
+| Method | Endpoint                 | Description               |
+| ------ | ------------------------ | ------------------------- |
+| GET    | `/check-auth`            | Check authenticated user  |
+| POST   | `/signup`                | Register a new account    |
+| POST   | `/login`                 | Login user                |
+| POST   | `/logout`                | Logout user               |
+| POST   | `/verify-email`          | Verify email using OTP    |
+| POST   | `/forgot-password`       | Send password reset email |
+| POST   | `/reset-password/:token` | Reset password            |
 
 ---
 
-## ⚙️ Environment Variables
+# 📧 Email Workflow
 
-Create a `.env` file in the root directory:
+### Sign Up
+
+```
+User
+   │
+   ▼
+Register Account
+   │
+   ▼
+Brevo sends Verification OTP
+   │
+   ▼
+Verify Email
+   │
+   ▼
+Welcome Email
+```
+
+---
+
+### Forgot Password
+
+```
+Forgot Password
+      │
+      ▼
+Generate Secure Token
+      │
+      ▼
+Brevo sends Reset Link
+      │
+      ▼
+Reset Password
+      │
+      ▼
+Password Reset Success Email
+```
+
+---
+
+# ⚙️ Environment Variables
+
+Create a `.env` file in the project root.
 
 ```env
-# Server
 PORT=5000
+
 NODE_ENV=development
 
-# MongoDB
 MONGO_URI=your_mongodb_connection_string
 
-# JWT
-JWT_SECRET=your_jwt_secret_key
+JWT_SECRET=your_jwt_secret
 
-# Email (Gmail SMTP)
-EMAIL=your_gmail_address@gmail.com
-EMAIL_PASSWORD=your_gmail_app_password
-
-# Client URL (used in password reset emails)
 CLIENT_URL=http://localhost:5173
-```
 
-> **Note:** Use a Gmail **App Password** (not your account password). Enable 2FA on your Google account, then generate an App Password under Google Account → Security → App Passwords.
+BREVO_API_KEY=your_brevo_api_key
+
+SENDER_EMAIL=your_verified_sender_email
+
+SENDER_NAME=Auth App
+```
 
 ---
 
-## 🚀 Getting Started
+# 🚀 Installation
 
-### Prerequisites
-- Node.js v18+
-- MongoDB Atlas account (or local MongoDB)
-- Gmail account with App Password configured
-
-### Installation & Run
+## Clone Repository
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/your-username/authentication-project.git
-cd authentication-project
+git clone https://github.com/SrilakshmanK/Authentication_Project.git
+```
 
-# 2. Install all dependencies (root + frontend)
+```bash
+cd Authentication_Project
+```
+
+---
+
+## Install Dependencies
+
+```bash
 npm run build
+```
 
-# 3. Set up environment variables
-cp .env.example .env
-# Edit .env with your credentials
+---
 
-# 4. Start development server
+## Configure Environment Variables
+
+Create
+
+```
+.env
+```
+
+inside the project root and add your credentials.
+
+---
+
+## Run Development Server
+
+```bash
 npm run dev
 ```
 
-The backend runs on `http://localhost:5000` and the frontend dev server on `http://localhost:5173`.
+Frontend
 
-### Scripts
+```
+http://localhost:5173
+```
 
-| Script | Description |
-|---|---|
-| `npm run dev` | Start backend with nodemon (development) |
-| `npm run start` | Start backend in production mode |
-| `npm run build` | Install all deps and build frontend for production |
+Backend
 
----
-
-## 🔒 Security Highlights
-
-- Passwords hashed with **bcryptjs** (salt rounds: 10)
-- JWT stored in **httpOnly, Secure, SameSite=Strict** cookies — not accessible via JavaScript
-- Email verification tokens expire in **24 hours**
-- Password reset tokens expire in **1 hour**
-- Token cleared from DB immediately after successful password reset
+```
+http://localhost:5000
+```
 
 ---
 
-## 📧 Email Flows
+# 📦 Available Scripts
 
-| Trigger | Email Sent |
-|---|---|
-| Sign Up | 6-digit verification OTP |
-| Email Verified | Welcome email |
-| Forgot Password | Password reset link |
-| Password Reset | Reset success confirmation |
-
----
-
-## 🧭 Frontend Routes
-
-| Path | Page | Access |
-|---|---|---|
-| `/` | Dashboard | Protected (authenticated + verified) |
-| `/signup` | Sign Up | Redirects if already logged in |
-| `/login` | Login | Redirects if already logged in |
-| `/verify-email` | Email Verification | Public |
-| `/forgot-password` | Forgot Password | Redirects if already logged in |
-| `/reset-password/:token` | Reset Password | Public |
+| Script          | Description                             |
+| --------------- | --------------------------------------- |
+| `npm run dev`   | Start backend using Nodemon             |
+| `npm run build` | Install dependencies and build frontend |
+| `npm start`     | Start production server                 |
 
 ---
 
-## 📄 License
+# 🔒 Security Features
 
-This project is open source and available under the [MIT License](LICENSE).
+* Passwords hashed using **bcrypt**
+* JWT Authentication
+* HTTP-only Cookies
+* Secure Cookie Configuration
+* Email Verification
+* Password Reset Tokens
+* Token Expiration
+* Protected Backend Routes
+* Persistent Login Sessions
+
+---
+
+# 📱 Frontend Routes
+
+| Route                    | Description        |
+| ------------------------ | ------------------ |
+| `/signup`                | Register           |
+| `/login`                 | Login              |
+| `/verify-email`          | Email Verification |
+| `/forgot-password`       | Forgot Password    |
+| `/reset-password/:token` | Reset Password     |
+| `/`                      | Dashboard          |
+
+---
+
+# 📈 Project Highlights
+
+* Full-stack MERN Authentication
+* Production Deployment on Render
+* MongoDB Atlas Integration
+* Brevo Transactional Email Integration
+* Zustand State Management
+* Secure Authentication Flow
+* Responsive Modern UI
+* RESTful API Architecture
+
+---
+
+# 📚 What I Learned
+
+While building this project I gained practical experience in:
+
+* Building complete authentication workflows
+* JWT-based authentication and authorization
+* Secure password hashing
+* HTTP-only cookie sessions
+* Email verification systems
+* Password reset flow
+* Third-party API integration (Brevo)
+* MongoDB Atlas deployment
+* Environment variable management
+* Full-stack deployment on Render
+* Zustand state management
+* Debugging real-world production issues
+
+---
+
+# 🚀 Future Improvements
+
+* Google OAuth Login
+* GitHub OAuth Login
+* Two-Factor Authentication (2FA)
+* Refresh Token Rotation
+* User Profile Management
+* Profile Picture Upload
+* Account Lockout Protection
+* Rate Limiting
+* Audit Logs
+* Role-Based Access Control (RBAC)
+
+---
+
+# 📄 License
+
+This project is licensed under the **MIT License**.
